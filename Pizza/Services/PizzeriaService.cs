@@ -36,7 +36,6 @@
         {
             return pizzeria;
         }
-        // TODO or better IsNameValid(), IsLengthNameValid(), IsIngredientPrice()?
         public Ingredient GetAvailableIngredient(string name)
         {
             Ingredient? foundIngredient = pizzeria.AvailableIngredients.FirstOrDefault(i => i.Key.Name == name).Key;
@@ -95,7 +94,7 @@
             StandardPizza? foundPizza = pizzeria.Menu.FirstOrDefault(p => p.Name == name);
             if (foundPizza == default)
             {
-                throw new OrderedPizzaNotFoundException($"Cannot find pizza with \"{name}\" name");
+                throw new PizzaNotFoundException($"Cannot find pizza with \"{name}\" name");
             }
             return foundPizza;
         }
@@ -128,7 +127,7 @@
             StandardPizza? foundPizza = pizzeria.Menu.FirstOrDefault(p => p.Name == name);
             if (foundPizza == default)
             {
-                throw new OrderedPizzaNotFoundException($"Cannot find pizza with \"{name}\" name");
+                throw new PizzaNotFoundException($"Cannot find pizza with \"{name}\" name");
             }
             foundPizza.Price = pizza.Price;
             foundPizza.NeededIngredients = pizza.NeededIngredients;
@@ -139,7 +138,7 @@
             StandardPizza? foundPizza = pizzeria.Menu.FirstOrDefault(p => p.Name == name);
             if (foundPizza == default)
             {
-                throw new OrderedPizzaNotFoundException($"Cannot find pizza with \"{name}\" name");
+                throw new PizzaNotFoundException($"Cannot find pizza with \"{name}\" name");
             }
             pizzeria.Menu = pizzeria.Menu.Where(c => c.Name != name).ToList();
         }

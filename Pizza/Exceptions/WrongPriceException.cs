@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Pizza.Exceptions
+namespace Pizza
 {
     public class WrongPriceException : Exception
     {

@@ -3,7 +3,6 @@
     [Serializable]
     public class Pizzeria
     {
-        //public string Name { get; set; }
         public List<StandardPizza> Menu { get; set; }
         public Dictionary<Ingredient, int> AvailableIngredients { get; set; }
         public List<Bill> Bills { get; set; }

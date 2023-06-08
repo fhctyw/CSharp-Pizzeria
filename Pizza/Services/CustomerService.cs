@@ -49,6 +49,7 @@
         {
             ServiceHelpers.CheckName(name);
             ServiceHelpers.CheckCustomer(customer);
+
             Customer foundCustomer = GetCustomer(name);
             foundCustomer.Address = customer.Address;
             foundCustomer.Money = customer.Money;
@@ -56,6 +57,7 @@
 
         public void RemoveCustomer(string name)
         {
+            ServiceHelpers.CheckName(name);
             Customer? foundCustomer = customers.FirstOrDefault(c => c.Name == name);
             if (foundCustomer == default)
             {
@@ -66,6 +68,7 @@
 
         public void AddCustomer(Customer customer)
         {
+            ServiceHelpers.CheckCustomer(customer);
             Customer? foundCustomer = customers.FirstOrDefault(c => c.Name == customer.Name);
             if (foundCustomer != default)
             {

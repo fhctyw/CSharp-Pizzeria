@@ -9,10 +9,6 @@
         {
             Name = string.Empty;
         }
-        public override string ToString()
-        {
-            return $"{Name} {Price:0.00}";
-        }
         public override bool Equals(object? obj)
         {
             return Equals(obj as Ingredient);

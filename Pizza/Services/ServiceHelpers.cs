@@ -1,6 +1,4 @@
-﻿using Pizza.Exceptions;
-
-namespace Pizza
+﻿namespace Pizza
 {
     public static class ServiceHelpers
     {

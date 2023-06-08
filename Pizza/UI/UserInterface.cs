@@ -25,9 +25,13 @@ namespace Pizza
 
                 PrintColorText("DB loaded successfully", ConsoleColor.Green);
             }
-            catch (Exception)
+            catch (DirectoryNotFoundException)
             {
-
+                PrintColorText("DB hasn't created yet", ConsoleColor.Cyan);
+            }
+            catch (Exception ex)
+            {
+                PrintColorText($"DB cannot be loaded {ex.Message}", ConsoleColor.Red);
             }
         }
         private void Save()
@@ -39,9 +43,9 @@ namespace Pizza
 
                 PrintColorText("DB saved successfully", ConsoleColor.Green);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                PrintColorText($"DB cannot be saved {ex.Message}", ConsoleColor.Red);
             }
         }
         public void Dispose()
@@ -67,14 +71,16 @@ namespace Pizza
         private void LoadCustomers()
         {
             Console.Write($"Enter file name(default, {UserInterfaceHelpers.DefaultCustomerFileName}): ");
-            string fileName = Console.ReadLine();
+            string fileName = Console.ReadLine() ?? UserInterfaceHelpers.DefaultCustomerFileName;
+
             customerService.LoadCustomers(fileName);
 
         }
         private void SaveCustomers()
         {
             Console.Write($"Enter file name(default, {UserInterfaceHelpers.DefaultCustomerFileName}): ");
-            string fileName = Console.ReadLine();
+            string? fileName = Console.ReadLine() ?? UserInterfaceHelpers.DefaultCustomerFileName;
+
             customerService.SaveCustomers(fileName);
         }
         private void GetCustomers()
@@ -84,11 +90,11 @@ namespace Pizza
         private void AddCustomer()
         {
             Console.Write("Enter customer name: ");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine() ?? string.Empty;
             Console.Write("Enter customer address: ");
-            string address = Console.ReadLine();
+            string address = Console.ReadLine() ?? string.Empty;
             Console.Write("Enter customer money: ");
-            decimal money = decimal.Parse(Console.ReadLine());
+            decimal money = decimal.Parse(Console.ReadLine() ?? "0");
             Customer customer = new()
             {
                 Name = name,
@@ -100,7 +106,7 @@ namespace Pizza
         private void GetCustomer()
         {
             Console.Write("Enter customer name: ");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine() ?? string.Empty;
             Customer customer = customerService.GetCustomer(name);
 
             Console.WriteLine();
@@ -112,21 +118,21 @@ namespace Pizza
         private void RemoveCustomer()
         {
             Console.Write("Enter customer name: ");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine() ?? string.Empty;
             customerService.RemoveCustomer(name);
         }
         private void ChangeCustomer()
         {
             Console.Write("Enter customer name to be changed: ");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine() ?? string.Empty;
 
             Customer foundCustomer = customerService.GetCustomer(name);
 
             Console.Write($"Enter new customer address(defualt, {foundCustomer.Address}): ");
-            string address = Console.ReadLine();
+            string address = Console.ReadLine() ?? string.Empty;
 
             Console.Write($"Enter new customer money(default, {foundCustomer.Money}): ");
-            decimal money = decimal.Parse(Console.ReadLine());
+            decimal money = decimal.Parse(Console.ReadLine() ?? "0");
 
             Customer customer = new()
             {
@@ -153,13 +159,13 @@ namespace Pizza
         private void LoadPizzeria()
         {
             Console.Write($"Enter file name(default, {UserInterfaceHelpers.DefaultPizzeriaFileName}): ");
-            string fileName = Console.ReadLine();
+            string fileName = Console.ReadLine() ?? UserInterfaceHelpers.DefaultPizzeriaFileName;
             pizzeriaService.LoadPizzeria(fileName);
         }
         private void SavePizzeria()
         {
             Console.Write($"Enter file name(default, {UserInterfaceHelpers.DefaultPizzeriaFileName}): ");
-            string fileName = Console.ReadLine();
+            string fileName = Console.ReadLine() ?? UserInterfaceHelpers.DefaultPizzeriaFileName;
             pizzeriaService.SavePizzeria(fileName);
         }
         private void GetPizzeria()
@@ -173,7 +179,7 @@ namespace Pizza
             );
             Console.WriteLine();
             Console.WriteLine("Bills:");
-            DisplayTableProperties(pizzeria.Bills, c => ((Customer)c).Name, d => d.ToString(), p => p.ToString() + "$",
+            DisplayTableProperties(pizzeria.Bills, c => ((Customer)c).Name, d => ((DateTime)d).ToString(), p => p.ToString() + "$",
                 p => string.Join(",", ((List<StandardPizza>)p).Select(pizza => pizza.Name)));
             Console.WriteLine();
             Console.WriteLine("Available Ingredients:");
@@ -187,26 +193,26 @@ namespace Pizza
             for (; ; )
             {
                 Console.Write("Enter ingredient name: ");
-                string name = Console.ReadLine();
+                string name = Console.ReadLine() ?? string.Empty;
 
                 Console.Write("Enter ingredient count: ");
 
-                ingredients[name] = int.Parse(Console.ReadLine()); ;
+                ingredients[name] = int.Parse(Console.ReadLine() ?? "0");
                 Console.Write("Enter if continue(y/n): ");
                 if (Console.ReadLine() == "n")
                 {
                     break;
                 }
-            };
+            }
             return ingredients;
         }
         private void AddPizzaToMenu()
         {
             Console.Write("Enter pizza name: ");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine() ?? string.Empty;
             var neededIngredients = AskIngredients();
             Console.Write("Enter pizze price: ");
-            decimal price = decimal.Parse(Console.ReadLine());
+            decimal price = decimal.Parse(Console.ReadLine() ?? "0");
 
             StandardPizza orderedPizza = new()
             {
@@ -219,9 +225,9 @@ namespace Pizza
         private void CreateIngredient()
         {
             Console.Write("Enter ingredient name: ");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine() ?? string.Empty;
             Console.Write("Enter ingredient price: ");
-            decimal price = decimal.Parse(Console.ReadLine());
+            decimal price = decimal.Parse(Console.ReadLine() ?? "0");
 
             Ingredient ingredient = new()
             {
@@ -235,7 +241,7 @@ namespace Pizza
         private void GetIngredient()
         {
             Console.Write("Enter ingredient name: ");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine() ?? string.Empty;
 
             Ingredient ingredient = pizzeriaService.GetAvailableIngredient(name);
 
@@ -247,10 +253,10 @@ namespace Pizza
         private void AddIngredients()
         {
             Console.Write("Enter ingredient name: ");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine() ?? string.Empty;
 
             Console.Write("Enter ingredient count: ");
-            int count = int.Parse(Console.ReadLine());
+            int count = int.Parse(Console.ReadLine() ?? "0");
 
             pizzeriaService.AddIngredients(name, count);
             PrintColorText($"Ingredient added {count} count successfully", ConsoleColor.Green);
@@ -262,11 +268,11 @@ namespace Pizza
             for (; ; )
             {
                 Console.Write("Enter pizza name: ");
-                string name = Console.ReadLine();
+                string name = Console.ReadLine() ?? string.Empty;
 
                 Console.Write("Enter pizza count: ");
 
-                orderedPizzas[name] = int.Parse(Console.ReadLine());
+                orderedPizzas[name] = int.Parse(Console.ReadLine() ?? "0");
 
                 Console.Write("Enter if continue(y/n): ");
                 if (Console.ReadLine() == "n")
@@ -283,7 +289,7 @@ namespace Pizza
             for (; ; )
             {
                 Console.Write("Enter custom pizza name: ");
-                string name = Console.ReadLine();
+                string name = Console.ReadLine() ?? string.Empty;
 
                 StandardPizza orderedPizza = pizzeriaService.GetPizza(name);
 
@@ -292,15 +298,13 @@ namespace Pizza
 
                 Console.Write("Enter pizza count: ");
 
-                int count = int.Parse(Console.ReadLine());
-
                 customPizzas[new()
                 {
                     Name = name,
                     NeededIngredients = orderedPizza.NeededIngredients,
                     Price = orderedPizza.Price,
                     AdditionalIngredients = additionalIngredients
-                }] = count;
+                }] = int.Parse(Console.ReadLine() ?? "0");
 
                 Console.Write("Enter if continue(y/n): ");
                 if (Console.ReadLine() == "n")
@@ -319,7 +323,7 @@ namespace Pizza
             for (; ; )
             {
                 Console.Write("Enter ingredient name: ");
-                string name = Console.ReadLine();
+                string name = Console.ReadLine() ?? string.Empty;
 
                 ingredients.Add(name);
 
@@ -339,7 +343,7 @@ namespace Pizza
         private void BuyPizza()
         {
             Console.Write("Enter customer name: ");
-            string customerName = Console.ReadLine();
+            string customerName = Console.ReadLine() ?? string.Empty;
 
             var orderedPizzas = AskOrderedPizzas();
             Console.Write("Enter if you want to add cutome pizza(y/n): ");
@@ -373,12 +377,14 @@ namespace Pizza
             int[] offsets = properties.Select(p => p.Name.Length).ToArray();
             if (enumerable.Any())
             {
-                foreach (object element in enumerable)
+                foreach (var element in enumerable)
                 {
                     for (int i = 0; i < properties.Length; i++)
                     {
-                        object obj = properties[i].GetValue(element);
-                        string? stringElement = i < selectors.Length ? selectors[i](obj) : obj.ToString();
+                        var obj = properties[i].GetValue(element);
+                        var stringElement = i < selectors.Length && obj != null
+                            ? selectors[i](obj)
+                            : obj?.ToString() ?? string.Empty;
                         offsets[i] = Math.Max(offsets[i], stringElement == null ? 0 : stringElement.Length);
                     }
                 }
@@ -396,13 +402,15 @@ namespace Pizza
             }
             Console.WriteLine('|');
             Console.WriteLine(new string('-', widthBorder));
-            foreach (object element in enumerable)
+            foreach (var element in enumerable)
             {
                 Console.Write('|');
                 for (int i = 0; i < properties.Length; i++)
                 {
-                    object obj = properties[i].GetValue(element);
-                    string? stringElement = i < selectors.Length ? selectors[i](obj) : obj.ToString();
+                    var obj = properties[i].GetValue(element);
+                    var stringElement = i < selectors.Length && obj != null
+                        ? selectors[i](obj)
+                        : obj?.ToString() ?? string.Empty;
                     Console.Write(stringElement.PadRight(offsets[i] + 1));
                     if (i != properties.Length - 1)
                     {
@@ -451,7 +459,7 @@ namespace Pizza
                 Console.Write("Enter choice: ");
                 try
                 {
-                    choice = int.Parse(Console.ReadLine());
+                    choice = int.Parse(Console.ReadLine() ?? "0");
                 }
                 catch (Exception)
                 {

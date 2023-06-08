@@ -11,10 +11,6 @@
             Name = string.Empty;
             NeededIngredients = new();
         }
-        public override string ToString()
-        {
-            return $"Pizza {Name} {Price:0.00}";
-        }
 
         public override bool Equals(object? obj)
         {
