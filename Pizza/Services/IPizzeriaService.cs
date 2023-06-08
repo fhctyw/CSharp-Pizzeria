@@ -17,5 +17,6 @@
         bool IsPizzasAvailable(string name);
         List<StandardPizza> GetPizzasByIngredients(List<string> ingredientNames);
         Bill SellPizza(string customerName, Order order);
+        List<Bill> GetBillsInDateRange(DateOnly from, DateOnly to);
     }
 }

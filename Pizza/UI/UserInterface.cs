@@ -54,11 +54,18 @@ namespace Pizza
         }
         public void Run()
         {
-            NavigateMenu(true, UseCustomerService, UsePizzaService, SearchByIngredients, BuyPizza);
+            NavigateMenu(true,
+                GetBillsInDateRange,
+                SearchByIngredients,
+                BuyPizza,
+                UseCustomerService,
+                UsePizzaService);
         }
         private void UseCustomerService()
         {
             NavigateMenu(false,
+                SortByName,
+                SortByMoney,
                 LoadCustomers,
                 SaveCustomers,
                 GetCustomers,
@@ -71,7 +78,12 @@ namespace Pizza
         private void LoadCustomers()
         {
             Console.Write($"Enter file name(default, {UserInterfaceHelpers.DefaultCustomerFileName}): ");
-            string fileName = Console.ReadLine() ?? UserInterfaceHelpers.DefaultCustomerFileName;
+            string? fileName = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                fileName = UserInterfaceHelpers.DefaultCustomerFileName;
+            }
 
             customerService.LoadCustomers(fileName);
 
@@ -79,7 +91,12 @@ namespace Pizza
         private void SaveCustomers()
         {
             Console.Write($"Enter file name(default, {UserInterfaceHelpers.DefaultCustomerFileName}): ");
-            string? fileName = Console.ReadLine() ?? UserInterfaceHelpers.DefaultCustomerFileName;
+            string? fileName = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                fileName = UserInterfaceHelpers.DefaultCustomerFileName;
+            }
 
             customerService.SaveCustomers(fileName);
         }
@@ -142,6 +159,21 @@ namespace Pizza
             };
             customerService.ChangeCustomer(name, customer);
         }
+        private void SortByName()
+        {
+            Console.Write($"Enter is descending: ");
+            bool isDescending = bool.Parse(Console.ReadLine() ?? "false");
+            customerService.SortCustomersByName(isDescending);
+            GetCustomers();
+        }
+        private void SortByMoney()
+        {
+            Console.Write($"Enter is descending: ");
+            bool isDescending = bool.Parse(Console.ReadLine() ?? "false");
+            customerService.SortCustomersByMoney(isDescending);
+            GetCustomers();
+        }
+
         #endregion  
         private void UsePizzaService()
         {
@@ -159,13 +191,25 @@ namespace Pizza
         private void LoadPizzeria()
         {
             Console.Write($"Enter file name(default, {UserInterfaceHelpers.DefaultPizzeriaFileName}): ");
-            string fileName = Console.ReadLine() ?? UserInterfaceHelpers.DefaultPizzeriaFileName;
+            string? fileName = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                fileName = UserInterfaceHelpers.DefaultPizzeriaFileName;
+            }
+
             pizzeriaService.LoadPizzeria(fileName);
         }
         private void SavePizzeria()
         {
             Console.Write($"Enter file name(default, {UserInterfaceHelpers.DefaultPizzeriaFileName}): ");
-            string fileName = Console.ReadLine() ?? UserInterfaceHelpers.DefaultPizzeriaFileName;
+            string? fileName = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                fileName = UserInterfaceHelpers.DefaultPizzeriaFileName;
+            }
+
             pizzeriaService.SavePizzeria(fileName);
         }
         private void GetPizzeria()
@@ -364,6 +408,17 @@ namespace Pizza
             Console.WriteLine($"Time: {bill.Time}");
             Console.WriteLine($"Total price: {bill.TotalPrice}");
             Console.WriteLine();
+        }
+
+        private void GetBillsInDateRange()
+        {
+            Console.WriteLine("format: yyyy-MM-dd");
+            Console.Write("Write `from` that date to take: ");
+            var from = DateOnly.Parse(Console.ReadLine() ?? string.Empty);
+            Console.Write("Write `to` that date to take: ");
+            var to = DateOnly.Parse(Console.ReadLine() ?? string.Empty);
+
+            DisplayTableProperties(pizzeriaService.GetBillsInDateRange(from, to));
         }
 
         #endregion

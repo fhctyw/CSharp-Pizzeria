@@ -9,5 +9,7 @@
         void AddCustomer(Customer customer);
         void ChangeCustomer(string name, Customer customer);
         void RemoveCustomer(string name);
+        void SortCustomersByName(bool isDescending);
+        void SortCustomersByMoney(bool isDescending);
     }
 }

@@ -76,5 +76,16 @@
             }
             customers.Add(customer);
         }
+
+        public void SortCustomersByName(bool isDescending)
+        {
+            customers = (isDescending ? customers.OrderByDescending(c => c.Name) : customers.OrderBy(c => c.Name)).ToList();
+        }
+
+
+        public void SortCustomersByMoney(bool isDescending)
+        {
+            customers = (isDescending ? customers.OrderByDescending(c => c.Money) : customers.OrderBy(c => c.Money)).ToList();
+        }
     }
 }

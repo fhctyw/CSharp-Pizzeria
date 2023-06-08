@@ -284,5 +284,19 @@
 
             return bill;
         }
+
+        public List<Bill> GetBillsInDateRange(DateOnly from, DateOnly to)
+        {
+            if (to < from)
+            {
+                throw new ArgumentException($"`from` must be after `to`");
+            }
+
+            return pizzeria.Bills.Where(b =>
+            {
+                var date = DateOnly.FromDateTime(b.Time);
+                return date >= from && date <= to;
+            }).ToList();
+        }
     }
 }
